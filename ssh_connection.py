@@ -49,7 +49,7 @@ def ssh_connection(ip):
         #starting from the beginning of the file
         selected_user_file.seek(0)
 
-        #Readind the password from the file
+        #Reading the password from the file
         password = selected_user_file.readlines()[0].split(',')[1].rstrip("\n")
 
         #Logging into the device
@@ -65,9 +65,9 @@ def ssh_connection(ip):
         #Start an interactive shell session on the router
         connection = session.invoke_shell()
 
-        #Setting terminal length for entire output - disable pagination
+        #Paramiko's way of sending commands to the device. Setting terminal length for entire output - disable pagination (When you go to show run for example and there is an option for more)
         connection.send("enable\n")
-        connection.send("terminal length 0\n")
+        connection.send("terminal length 0\n") #Is simmillar to us typing the spacebar key on the command prompt to get more information
         time.sleep(1)
 
         #Entering global config mode
@@ -93,7 +93,9 @@ def ssh_connection(ip):
         selected_cmd_file.close()
 
         #checking command output for IOS syntax errors
-        router_output = connection.rcv(65535)
+        router_output = connection.recv(65535)
+
+        
 
         if re.search(b"% Invalid input", router_output):
             print(f"* There was atleast one IOS syntax errors on device {ip}")
@@ -102,7 +104,9 @@ def ssh_connection(ip):
             print(f"\nDone for device {ip} :)\n")
         
         #Test for reading command output
-        print(str(router_output) + "\n")
+        #print(str(router_output) + "\n")
+        #Using REGEX to exract only IPs from output - We can use the index at the end to get just the loopback address from each Arista device
+        #print(re.findall(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", str(router_output))[1]) #We have to put str(router_output) or else we get TypeError: cannot use a string pattern on a bytes-like object
 
         #Closing the connection
         session.close()

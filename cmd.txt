@@ -1,0 +1,7 @@
+tacacs-server host 192.168.1.117
+tacacs-server key python
+tacacs-server timeout 10
+ntp server 192.168.1.118
+vlan 22
+vlan 33
+vlan 44

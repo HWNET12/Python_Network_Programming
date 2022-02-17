@@ -6,7 +6,7 @@ def ip_file_valid():
 
 
     #Prompting user for input
-    ip_file = input("\n# Enter IP file path and name (e.g. C:\Desktop\file.txt): ")
+    ip_file = input("\n# Enter IP file path and name (e.g. C:\Desktop\\file.txt): ")
 
     #Checking if the file exists
     if os.path.isfile(ip_file) == True:
